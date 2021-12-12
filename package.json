@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^0.24.0",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -10,7 +11,7 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon server.js && next dev -p 3200",
     "build": "next build",
     "start": "cross-env NODE_ENV=production node server.js"
   }

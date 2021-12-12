@@ -4,4 +4,8 @@ const productController = require('../controllers/productController');
 const router = express.Router({ mergeParams: true });
 
 router
-  .get('/', )
+  .route('/')
+  .post(productController.createProduct)
+  .get(productController.getAllProducts);
+
+module.exports = router;

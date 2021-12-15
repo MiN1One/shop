@@ -1,17 +1,14 @@
 const ProductModel = require("../models/productModel");
+const {
+  getAllDocuments,
+  createDocument,
+  updateDocument,
+  deleteDocument,
+  getSingleDocument
+} = require("../utils/factory");
 
-exports.createProduct = async (req, res, next) => {
-  const product = await ProductModel.create(req.body.product);
-  res.status(201).json({
-    status: 'success',
-    data: { product }
-  });
-};
-
-exports.getAllProducts = async (req, res, next) => {
-  const products = await ProductModel.find();
-  res.status(200).json({
-    status: 'success',
-    data: { products }
-  });
-};
+exports.createProduct = createDocument(ProductModel, 'product');
+exports.getAllProducts = getAllDocuments(ProductModel, 'products');
+exports.updateProduct = updateDocument(ProductModel, 'product');
+exports.deleteProduct = deleteDocument(ProductModel, 'product');
+exports.getSingleProduct = getSingleDocument(ProductModel, 'product', 'reviews', 'orders');

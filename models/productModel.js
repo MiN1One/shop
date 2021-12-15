@@ -17,12 +17,31 @@ const productVariantSchema = mongoose.Schema({
   }
 });
 
+const productOptionSchema = mongoose.Schema({
+  name: 'string',
+  value: ['string']
+});
+
 const productSchema = mongoose.Schema({
   title: {
     type: 'string',
     required: [true, 'Product must have a title'],
     minLength: 1,
     maxLength: 45
+  },
+  productType: {
+    type: 'string',
+    required: [true, 'Product type is required'],
+    maxLength: 50
+  },
+  active: {
+    type: 'boolean',
+    default: true
+  },
+  tags: ['string'],
+  options: {
+    type: [productOptionSchema],
+    validate: [(val) => val.length < 5, 'Options cannot be more than 5']
   },
   price: {
     type: 'number',
@@ -34,6 +53,18 @@ const productSchema = mongoose.Schema({
   },
   images: ['string'],
   previewImage: 'string',
+  vendor: {
+    type: 'string',
+    default: 'self'
+  },
+  collectionId: { 
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Collection'
+  },
+  discount: {
+    type: 'number',
+    default: 0
+  },
   createdAt: {
     default: Date.now,
     type: Date
@@ -42,7 +73,7 @@ const productSchema = mongoose.Schema({
   description: {
     type: 'string',
     maxLength: 1000
-  }
+  },
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }

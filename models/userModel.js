@@ -23,6 +23,10 @@ const userSchema = mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'Product'
   }],
+  active: {
+    type: 'boolean',
+    default: false
+  },
   role: {
     type: 'string',
     enum: {

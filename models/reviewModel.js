@@ -6,6 +6,10 @@ const reviewSchema = mongoose.Schema({
     ref: 'User',
     required: [true, 'User ID must be provided']
   },
+  visible: {
+    type: 'boolean',
+    default: false
+  },
   rating: {
     type: 'number',
     min: [1, 'Rating cannot be below 1'],

@@ -17,6 +17,7 @@ mongoose.connect(mongoUrl)
   .catch(() => console.log('MONGODB CONNECTION FAILED'));
 
 const port = +process.env.PORT || 3200;
+
 nextApp.prepare().then(() => {
   app.get('*', (req, res) => (
     nextApp.render(req, res, req.path, req.query)

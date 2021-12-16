@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
-const { v5: uuid } = require('uuid');
+const { v4: uuid } = require('uuid');
 
-const lineItemSchema = mongoose.Schema({
+exports.lineItemSchema = mongoose.Schema({
   productId: {
     type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Product',
     required: [true, 'Line item must have a product ID']
   },
   quantity: {
@@ -13,7 +14,7 @@ const lineItemSchema = mongoose.Schema({
 });
 
 const orderSchema = mongoose.Schema({
-  package: [lineItemSchema],
+  package: [this.lineItemSchema],
   userId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'User',
@@ -55,4 +56,4 @@ const orderSchema = mongoose.Schema({
 
 const OrderModel = mongoose.model('Order', orderSchema);
 
-module.exports = OrderModel;
+exports.OrderModel = OrderModel;

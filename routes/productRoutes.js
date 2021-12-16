@@ -1,11 +1,12 @@
 const express = require('express');
 const productController = require('../controllers/productController');
 const reviewRoutes = require('./reviewRoutes');
+const orderRoutes = require('./orderRoutes');
 
 const router = express.Router({ mergeParams: true });
 
 router.use('/:productId/reviews', reviewRoutes);
-// router.use('/:productId/orders', orderRoutes);
+router.use('/:productId/orders', orderRoutes);
 
 router
   .route('/')

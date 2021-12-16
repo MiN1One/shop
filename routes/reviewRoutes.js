@@ -4,6 +4,13 @@ const reviewController = require('../controllers/reviewController');
 
 router
   .route('/')
-  .get(reviewController.getAllReviews);
+  .get(reviewController.getAllReviews)
+  .post(reviewController.createReview);
+
+router
+  .route('/:reviewId')
+  .get(reviewController.getSingleReview)
+  .patch(reviewController.updateReview)
+  .delete(reviewController.deleteReview);
 
 module.exports = router;

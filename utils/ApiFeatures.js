@@ -22,12 +22,6 @@ module.exports = class ApiFeatures {
     return this;
   }
 
-  limit() {
-    const limit = this.expressQuery.limit || 25;
-    this.mongooseQuery = this.mongooseQuery.limit(limit);
-    return this;
-  }
-
   project() {
     if (this.expressQuery.fields) {
       const fields = this.expressQuery.fields.split(',')

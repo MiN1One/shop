@@ -6,6 +6,8 @@ exports.getAllDocuments = (Model, suffix, ...populateObjects) => (
   catchAsync(async (req, res) => {
     const query = new ApiFeatures(req.query, Model.find())
       .filter()
+      .paginate()
+      .project()
       .mongooseQuery;
       
     if (populateObjects) {
@@ -34,7 +36,13 @@ exports.createDocument = (Model, suffix) => (
 
 exports.getSingleDocument = (Model, suffix, ...populateObjects) => (
   catchAsync(async (req, res, next) => {
-    const query = Model.findById(req.params[`${suffix}Id`]);
+    const query = new ApiFeatures(
+      req.query,
+      Model.findById(req.params[`${suffix}Id`])
+    )
+      .project()
+      .mongooseQuery;
+
     if (populateObjects) {
       populateObjects.forEach(p => query.populate(p));
     }

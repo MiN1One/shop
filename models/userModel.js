@@ -34,7 +34,10 @@ const userSchema = mongoose.Schema({
       message: '{VALUE} user role is not supported'
     },
     default: 'user'
-  }
+  },
+  passwordChangedAt: Date,
+  passwordResetToken: 'string',
+  passwordResetExpires: Date
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -47,9 +50,15 @@ userSchema.virtual('reviews', {
 });
 
 userSchema.virtual('orders', {
-  loacalField: '_id',
+  localField: '_id',
   foreignField: 'userId',
   ref: 'Order'
+});
+
+userSchema.virtual('cartItems', {
+  localField: '_id',
+  foreignField: 'userId',
+  ref: 'CartItem'
 });
 
 const UserModel = mongoose.model('User', userSchema);

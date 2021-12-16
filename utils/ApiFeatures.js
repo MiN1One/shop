@@ -27,6 +27,7 @@ module.exports = class ApiFeatures {
       const fields = this.expressQuery.fields.split(',')
       this.mongooseQuery = this.mongooseQuery.select(fields);
     }
+    this.mongooseQuery = this.mongooseQuery.select('-__v');
     return this;
   }
 

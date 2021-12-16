@@ -1,4 +1,29 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const emailValidator = require('email-validator');
+
+const validatePassword = (password) => {
+  if (password.length < 8) {
+    return false;
+  }
+  // contains numbers
+  if (!(/\d/.test(password))) {
+    return false;
+  }
+  // contains letters
+  if (!(/[a-zA-Z]/g.test(password))) {
+    return false;
+  }
+  // contains capital chars
+  if (!(/[A-Z]/g.test(password))) {
+    return false;
+  }
+  // contains lowercase chars
+  if (!(/[a-z]/g.test(password))) {
+    return false;
+  }
+  return true;
+};
 
 const userSchema = mongoose.Schema({
   name: {
@@ -9,8 +34,15 @@ const userSchema = mongoose.Schema({
     type: 'string',
     required: [true, 'Last name is required']
   },
-  email: 'string',
-  phone_number: {
+  email: {
+    type: 'string',
+    unique: true,
+    validate: {
+      validator: emailValidator.validate,
+      message: 'Please provide valid email address'
+    }
+  },
+  phoneNumber: {
     type: 'string',
     required: [true, 'Phone number is required'],
     unique: true
@@ -34,6 +66,15 @@ const userSchema = mongoose.Schema({
       message: '{VALUE} user role is not supported'
     },
     default: 'user'
+  },
+  password: {
+    type: 'string',
+    required: [true, 'Password is required'],
+    select: false,
+    validate: {
+      validator: validatePassword,
+      message: 'Password does not meet the security criteria'
+    }
   },
   passwordChangedAt: Date,
   passwordResetToken: 'string',
@@ -60,6 +101,18 @@ userSchema.virtual('cartItems', {
   foreignField: 'userId',
   ref: 'CartItem'
 });
+
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, 14);
+  next();
+});
+
+userSchema.methods.checkPassword = function(currentPassword, candidatePassword) {
+  return bcrypt.compare(candidatePassword, currentPassword);
+}
 
 const UserModel = mongoose.model('User', userSchema);
 

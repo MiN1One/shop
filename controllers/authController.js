@@ -52,24 +52,68 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization?.startsWith('Bearer') && 
     req.headers.authorization.split(' ')[1]
   );
-
   if (!authToken) {
     return next(new ApiError('Invalid auth token provided', 401));
   }
-
   const parsedToken = jwt.verify(authToken, process.env.JWT_SECRET);
   const user = await UserModel.findOne({ phoneNumber: parsedToken.phoneNumber });
-  
   if (!user) {
     return next(new ApiError('Such user does no longer exist', 403));
   }
-
+  if (user.passwordChanged(parsedToken.iat)) {
+    return next(new ApiError('Password had been changed, please reauthorize', 401));
+  }
   req.user = user;
   next();
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, candidatePassword } = req.body;
+  if (!currentPassword || !candidatePassword) {
+    return next(new ApiError('Please provide valid passwords', 400));
+  }
 
+  const user = await UserModel.findById(req.user._id).select('+password');
+  if (!(await user.checkPassword(user.password, currentPassword))) {
+    return next(new ApiError('Wrong current password is provided', 403));
+  }
+
+  user.password = candidatePassword;
+  await user.save({ validateBeforeSave: true });
+  user.password = undefined;
+
+  res.status(200).json({
+    status: 'success',
+    data: { user }
+  });
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+
+});
+
+exports.updateSelf = catchAsync(async (req, res, next) => {
+  const { user } = req.body;
+  if (user.password) {
+    return next(
+      new ApiError('Invalid param provided, password cannot be changed via this route', 400)
+    );
+  }
+  const update = {
+    phoneNumber: user.phoneNumber,
+    name: user.name,
+    email: user.email,
+    lastName: user.lastName
+  };
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    req.user._id, 
+    update, 
+    { new: true }
+  );
+  res.status(200).json({
+    status: 'success',
+    data: { user: updatedUser }
+  });
 });
 
 exports.restrict = (...roles) => (

@@ -12,15 +12,20 @@ router.use('/:productId/orders', orderRoutes);
 router
   .route('/')
   .post(productController.createProduct)
-  .get(
-    authController.protect,
-    productController.getAllProducts
-  )
+  .get(productController.getAllProducts)
   
 router
   .route('/:productId')
-  .delete(productController.deleteProduct)
-  .patch(productController.updateProduct)
+  .delete(
+    authController.protect,
+    authController.restrict('admin'),
+    productController.deleteProduct
+  )
+  .patch(
+    authController.protect,
+    authController.restrict('admin'),
+    productController.updateProduct
+  )
   .get(productController.getSingleProduct);
 
 module.exports = router;

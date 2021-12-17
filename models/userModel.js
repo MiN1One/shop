@@ -102,6 +102,7 @@ userSchema.virtual('cartItems', {
   ref: 'CartItem'
 });
 
+// ------ MIDDLEWARES ------
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -110,8 +111,20 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+
+// ------ METHODS ------
 userSchema.methods.checkPassword = function(currentPassword, candidatePassword) {
   return bcrypt.compare(candidatePassword, currentPassword);
+}
+
+userSchema.methods.passwordChanged = function(passwordChangedTimeStamp, jwtTimeStamp) {
+  if (passwordChangedTimeStamp) {
+    passwordChangedTimeStamp = parseInt(
+      new Date(passwordChangedTimeStamp).getTime() * 1000, 10
+    );
+    return passwordChangedTimeStamp > jwtTimeStamp;
+  }
+  return false;
 }
 
 const UserModel = mongoose.model('User', userSchema);

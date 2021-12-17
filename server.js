@@ -24,19 +24,25 @@ mongoose.connect(mongoUrl)
 
 const port = +process.env.PORT || 3200;
 
-nextApp.prepare().then(() => {
-  app.get('*', (req, res) => (
-    nextApp.render(req, res, req.path, req.query)
-  ));
+nextApp
+  .prepare()
+  .then(() => {
+    app.get('*', (req, res) => (
+      nextApp.render(req, res, req.path, req.query)
+    ));
 
-  const server = app.listen(port, (er) => {
-    if (er) throw er;
-    console.log(`APP LISTENING ON PORT ${port}`)
-  });
-
-  process.on('unhandledRejection', (er) => {
-    console.log('---- UNHANDLED REJECTION ----');
+    const server = app.listen(port, () => (
+      console.log(`APP LISTENING ON PORT ${port}`)
+    ));
+    
+    process.on('unhandledRejection', (er) => {
+      console.log('---- UNHANDLED REJECTION ----');
+      console.log(er);
+      server.close(() => process.exit(1));
+    });
+  })
+  .catch((er) => {
+    console.log('---- ERROR SETTING UP NEXT SERVER ----');
     console.log(er);
-    server.close(() => process.exit(1));
+    process.exit(1);
   });
-});

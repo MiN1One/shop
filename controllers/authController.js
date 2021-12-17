@@ -79,6 +79,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   }
 
   user.password = candidatePassword;
+  user.passwordChangedAt = Date.now();
   await user.save({ validateBeforeSave: true });
   user.password = undefined;
 
@@ -88,8 +89,20 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.resetPassword = catchAsync(async (req, res, next) => {
+exports.getPasswordResetToken = catchAsync(async (req, res, next) => {
+  const { phoneNumber, email } = req.body;
+  if (!phoneNumber || !email) {
+    return next(new ApiError('Please provide phone number or email address', 400));
+  }
 
+  const user = await UserModel.find(
+    phoneNumber ? { phoneNumber } : { email }
+  );
+  if (!user) {
+    return next(new ApiError('Such user does not exist', 404));
+  }
+
+  const resetToken = user.createPasswordResetToken();
 });
 
 exports.updateSelf = catchAsync(async (req, res, next) => {

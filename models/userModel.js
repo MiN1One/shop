@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const emailValidator = require('email-validator');
+const { v4: uuid } = require('uuid');
 
 const validatePassword = (password) => {
   if (password.length < 8) {
@@ -111,7 +112,6 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-
 // ------ METHODS ------
 userSchema.methods.checkPassword = function(currentPassword, candidatePassword) {
   return bcrypt.compare(candidatePassword, currentPassword);
@@ -125,6 +125,15 @@ userSchema.methods.passwordChanged = function(passwordChangedTimeStamp, jwtTimeS
     return passwordChangedTimeStamp > jwtTimeStamp;
   }
   return false;
+}
+
+userSchema.methods.createPasswordResetToken = function() {
+  const token = uuid();
+  this.passwordResetToken = token;
+  this.passwordResetExpires = parseInt(
+    Date.now() + +process.env.PASSWORD_RESET_EXPIRESIN * 60 * 60 * 1000
+  );
+  return token;
 }
 
 const UserModel = mongoose.model('User', userSchema);

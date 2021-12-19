@@ -28,10 +28,15 @@ const reviewSchema = mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now()
-  }
+  },
+  updatedAt: Date
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
+});
+
+reviewSchema.pre('updateOne', function() {
+  this.set({ updatedAt: Date.now() });
 });
 
 const ReviewModel = mongoose.model('Review', reviewSchema);

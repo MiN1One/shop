@@ -57,7 +57,12 @@ const orderSchema = mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now()
-  }
+  },
+  updatedAt: Date
+});
+
+orderSchema.pre('updateOne', function() {
+  this.set({ updatedAt: Date.now() });
 });
 
 const OrderModel = mongoose.model('Order', orderSchema);

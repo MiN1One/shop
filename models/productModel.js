@@ -81,6 +81,7 @@ const productSchema = mongoose.Schema({
     type: 'number',
     default: 0
   },
+  updatedAt: Date,
   stockQuantity: {
     type: 'number',
     required: [true, 'Product stock quantity is required']
@@ -94,6 +95,10 @@ productSchema.virtual('reviews', {
   localField: '_id',
   foreignField: 'productId',
   ref: 'Review'
+});
+
+productSchema.pre('updateOne', function() {
+  this.set({ updatedAt: Date.now() });
 });
 
 const ProductModel = mongoose.model('Product', productSchema);

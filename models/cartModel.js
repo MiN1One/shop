@@ -15,11 +15,17 @@ const cartItemSchema = mongoose.Schema({
   processed: {
     type: 'boolean',
     default: false
-  }
+  },
+  updatedAt: Date
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
+
+cartItemSchema.pre('updateOne', function() {
+  this.set({ updatedAt: Date.now() });
+});
+
 
 const CartItemModel = mongoose.model('CartItem', cartItemSchema);
 

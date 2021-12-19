@@ -77,6 +77,7 @@ const userSchema = mongoose.Schema({
       message: 'Password does not meet the security criteria'
     }
   },
+  updatedAt: Date,
   passwordChangedAt: Date,
   passwordResetToken: 'string',
   passwordResetExpires: Date
@@ -112,6 +113,10 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+userSchema.pre('updateOne', function() {
+  this.set({ updatedAt: Date.now() });
+});
+
 // ------ METHODS ------
 userSchema.methods.checkPassword = function(currentPassword, candidatePassword) {
   return bcrypt.compare(candidatePassword, currentPassword);
@@ -135,6 +140,10 @@ userSchema.methods.createPasswordResetToken = function() {
   );
   return token;
 }
+
+userSchema.pre('updateOne', function() {
+  this.set({ updatedAt: Date.now() });
+});
 
 const UserModel = mongoose.model('User', userSchema);
 

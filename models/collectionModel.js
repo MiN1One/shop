@@ -33,7 +33,8 @@ const collectionSchema = mongoose.Schema({
     type: 'boolean',
     default: true
   },
-  tags: ['string']
+  tags: ['string'],
+  updatedAt: Date
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -55,6 +56,11 @@ collectionSchema.pre('save', function(next) {
   });
   next();
 });
+
+collectionSchema.pre('updateOne', function() {
+  this.set({ updatedAt: Date.now() });
+});
+
 
 const CollectionModel = mongoose.model('Collection', collectionSchema);
 

@@ -103,6 +103,7 @@ exports.getPasswordResetToken = catchAsync(async (req, res, next) => {
   }
 
   const resetToken = user.createPasswordResetToken();
+  // send to email service
 });
 
 exports.updateSelf = catchAsync(async (req, res, next) => {

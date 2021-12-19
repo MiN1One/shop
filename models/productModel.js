@@ -19,7 +19,7 @@ const productVariantSchema = mongoose.Schema({
 
 const productOptionSchema = mongoose.Schema({
   name: 'string',
-  value: ['string']
+  values: ['string']
 });
 
 const productSchema = mongoose.Schema({
@@ -41,7 +41,10 @@ const productSchema = mongoose.Schema({
   tags: ['string'],
   options: {
     type: [productOptionSchema],
-    validate: [(val) => val.length < 5, 'Options cannot be more than 5']
+    validate: [
+      (val) => val.length < 5, 
+      'Options cannot be more than 5'
+    ]
   },
   price: {
     type: 'number',
@@ -74,6 +77,14 @@ const productSchema = mongoose.Schema({
     type: 'string',
     maxLength: 1000
   },
+  numberOfPurchases: {
+    type: 'number',
+    default: 0
+  },
+  stockQuantity: {
+    type: 'number',
+    required: [true, 'Product stock quantity is required']
+  }
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }

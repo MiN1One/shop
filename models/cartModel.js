@@ -5,11 +5,16 @@ const cartItemSchema = mongoose.Schema({
   package: [lineItemSchema],
   userId: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: [true, 'User must be known for cart item']
   },
   createdAt: {
     type: Date,
     default: Date.now()
+  },
+  processed: {
+    type: 'boolean',
+    default: false
   }
 }, {
   toJSON: { virtuals: true },

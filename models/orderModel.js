@@ -20,16 +20,22 @@ const orderSchema = mongoose.Schema({
     ref: 'User',
     required: [true, 'Customer ID must be provided']
   },
-  orderId: {
-    type: 'string',
-    default: uuid(),
-    unique: true
+  pickedUp: {
+    type: 'boolean',
+    default: false
+  },
+  cartItemId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'CartItem'
   },
   click_trans_id: 'string',
-  totalPrice: 'number',
-  totalQuantity: {
+  totalPriceWithDiscount: {
     type: 'number',
-    required: [true, 'Quantity must be given']
+    required: [true, 'Total price with discount is required']
+  },
+  totalPrice: {
+    type: 'number',
+    required: [true, 'Total price must be provided']
   },
   prepareId: {
     type: 'string',

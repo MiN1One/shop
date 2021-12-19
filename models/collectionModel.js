@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const handleize = require('slugify');
 
 const collectionFiltersSchema = mongoose.Schema({
   path: {
@@ -22,13 +23,12 @@ const collectionSchema = mongoose.Schema({
     type: 'string',
     maxLength: 1000
   },
+  filters: [collectionFiltersSchema],
   createdAt: {
     type: Date,
     default: Date.now()
   },
-  filters: {
-    
-  },
+  handle: 'string',
   active: {
     type: 'boolean',
     default: true
@@ -39,11 +39,23 @@ const collectionSchema = mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-collectionSchema.virtuals('products', {
+// ------ VIRTUALS ------
+collectionSchema.virtual('products', {
   foreignField: 'collectionId',
   localField: '_id',
   ref: 'Product',
   justOne: false
 });
 
+// ------ MIDDLEWARES ------
+collectionSchema.pre('save', function(next) {
+  this.handle = handleize(this.title, {
+    lower: true,
+    remove: /[*+~.()'"!:@]/g
+  });
+  next();
+});
+
 const CollectionModel = mongoose.model('Collection', collectionSchema);
+
+module.exports = CollectionModel;

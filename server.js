@@ -1,10 +1,12 @@
+'use strict';
+
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const next = require('next');
+const logger = require('./utils/logger');
 
 process.on('uncaughtException', (er) => {
-  console.log('---- UNCAUGHT EXCEPTION ----');
-  console.log(er);
+  logger.error(er);
   process.exit(1);
 });
 
@@ -19,8 +21,8 @@ const mongoUrl = process.env.MONGO_CONNECTION.replace(
 );
 
 mongoose.connect(mongoUrl)
-  .then(() => console.log('MONGODB CONNECTION SUCCESSFUL'))
-  .catch(() => console.log('ERROR! MONGODB CONNECTION FAILED'));
+  .then(() => logger.info('MongoDB connection successful'))
+  .catch(() => logger.info('MongoDB connection failed'));
 
 const port = +process.env.PORT || 3200;
 
@@ -32,17 +34,15 @@ nextApp
     ));
 
     const server = app.listen(port, () => (
-      console.log(`APP LISTENING ON PORT ${port}`)
+      logger.info(`App listening on ${port}`)
     ));
     
     process.on('unhandledRejection', (er) => {
-      console.log('---- UNHANDLED REJECTION ----');
-      console.log(er);
+      logger.error(er);
       server.close(() => process.exit(1));
     });
   })
   .catch((er) => {
-    console.log('---- ERROR SETTING UP NEXT SERVER ----');
-    console.log(er);
+    logger.error(er);
     process.exit(1);
   });

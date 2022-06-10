@@ -12,7 +12,7 @@ router
   .get(collectionController.getAllCollections)
   .post(
     authController.protect,
-    authController.restrict('admin'),
+    authController.restrictTo('admin'),
     collectionController.createCollection
   );
 
@@ -21,12 +21,12 @@ router
   .get(collectionController.getSingleCollection)
   .delete(
     authController.protect,
-    authController.restrict('admin'),
+    authController.restrictTo('admin'),
     collectionController.deleteCollection
   )
   .patch(
     authController.protect,
-    authController.restrict('admin'),
+    authController.restrictTo('admin'),
     collectionController.updateCollection
   );
 

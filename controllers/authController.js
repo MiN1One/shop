@@ -48,7 +48,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-  const authToken = req.cookies.token || (
+  const authToken = req.cookies?.token || (
     req.headers.authorization?.startsWith('Bearer') && 
     req.headers.authorization.split(' ')[1]
   );
@@ -130,7 +130,7 @@ exports.updateSelf = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.restrict = (...roles) => (
+exports.restrictTo = (...roles) => (
   (req, _, next) => {
     if (!roles.includes(req.user.role)) {
       return next(

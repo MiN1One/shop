@@ -46,6 +46,10 @@ const productSchema = mongoose.Schema({
       'Options cannot be more than 5'
     ]
   },
+  averageRating: {
+    type: 'number',
+    default: 1
+  },
   price: {
     type: 'number',
     required: [true, 'Product price must be specified']

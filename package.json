@@ -13,14 +13,17 @@
     "logform": "^2.3.0",
     "md5": "^2.3.0",
     "mongoose": "^6.1.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
     "next": "^12.0.7",
     "sha1": "^1.1.1",
+    "sharp": "^0.29.3",
     "slugify": "^1.6.4",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
   },
   "scripts": {
-    "dev": "nodemon server.js && next dev -p 3200",
+    "dev": "cross-env NODE_ENV=development nodemon server.js && next dev -p 3200",
     "build": "next build",
     "start": "cross-env NODE_ENV=production node server.js"
   }

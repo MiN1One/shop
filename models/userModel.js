@@ -141,10 +141,6 @@ userSchema.methods.createPasswordResetToken = function() {
   return token;
 }
 
-userSchema.pre('updateOne', function() {
-  this.set({ updatedAt: Date.now() });
-});
-
 const UserModel = mongoose.model('User', userSchema);
 
 module.exports = UserModel;

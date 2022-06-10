@@ -1,12 +1,11 @@
 'use strict';
-
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const next = require('next');
 const logger = require('./utils/logger');
 
 process.on('uncaughtException', (er) => {
-  logger.error(er);
+  logger.error('uncaughtException' + er);
   process.exit(1);
 });
 
@@ -38,7 +37,7 @@ nextApp
     ));
     
     process.on('unhandledRejection', (er) => {
-      logger.error(er);
+      logger.error('unhandledRejection: ' + er);
       server.close(() => process.exit(1));
     });
   })

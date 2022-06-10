@@ -1,4 +1,4 @@
-const catchAsync = require('../../holis/holis-api/utils/catchAsync');
+const catchAsync = require('../utils/catchAsync');
 const CartItemModel = require('../models/cartModel');
 const ApiError = require('../utils/ApiError');
 const md5 = require('md5');

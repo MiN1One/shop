@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/errorController');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 
 const collectionRoutes = require('./routes/collectionRoutes');
 const productsRoutes = require('./routes/productRoutes');
@@ -14,6 +15,7 @@ const payRoutes = require('./routes/payRoutes');
 
 const app = express();
 
+app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'prod'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));

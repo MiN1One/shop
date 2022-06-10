@@ -1,5 +1,3 @@
-const logger = require("../utils/logger");
-
 const paymentErrorMessages = {
   '0': 'Success Successful request',
   '-1': 'SIGN CHECK FAILED! Signature verification error',
@@ -46,7 +44,7 @@ const getPaymentError = (error) => {
 };
 
 module.exports = (error, req, res, next) => {
-  logger.error(error);
+  console.log(error, error.stack);
   let errorObj;
   if (!error.paymentError) {
     if (process.env.NODE_ENV === 'development') {
